@@ -145,3 +145,11 @@ h2 {
   text-align: center;
   margin-top: 20px;
 }
+
+.todo-input {
+  margin-bottom: 15px;
+}
+.name-label{
+  margin-top: 15px;
+  margin-bottom: 15px;
+}

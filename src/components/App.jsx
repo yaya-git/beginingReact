@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState,useEffect, useMemo } from 'react';
 import NoTodos from './NoTodos.jsx';
 import '../reset.css';
 import '../App.css';
@@ -6,6 +6,8 @@ import TodoForm from './TodoForm.jsx';
 import TodoList from './TodoList.jsx';
 
 function App() {
+  const [name, setName] = useState('');
+  const nameInputEl = useRef(null);
   const [todos, setTodos] = useState([
     {
       id: 1,
@@ -103,9 +105,14 @@ function cancelEdit(event,id){
   setTodos(updatedTodos);
 }
 
-function remaining() {
+function remainingCalculation() {
+  console.log('calculating remaining todos. This is slow.')
   return todos.filter(todo => !todo.isComplete).length;
 }
+
+// useMemo, sirve para ejecutar las funciones en donde deben de ejecutarse y no desde que la aplicacion cargue.
+// El segundo parametro es para indicar que objeto/array estara cambiando y cuando este cambie se ejecute la funcion.
+const remaining = useMemo(remainingCalculation, [todos]);
 
 function clearCompleted() {
   setTodos([...todos].filter(todo => !todo.isComplete));
@@ -133,9 +140,34 @@ return todos.filter(todo => !todo.isComplete);
 
 }
 
+useEffect (()=>{
+  console.log('use effect running');
+  nameInputEl.current.focus();
+
+  return function cleanup(){
+console.log('cleaning up');
+  };
+  // sin los corchetes ", []" se ejecuta en cualquier elemento/cambia cualquier estado.
+}, []);
+
   return (
     <div className="todo-app-container">
       <div className="todo-app">
+        <div className="name-container">
+          <h2>What is your name?</h2>
+          
+          <form action='#'>
+            <input 
+            type="text" 
+            ref={nameInputEl}
+            className='todo-input' 
+            placeholder='What is your name?'
+            value={name}
+            onChange={event => setName(event.target.value)}
+             />
+          </form>
+          {name && <p className="name-label">Hello, {name}</p>}
+        </div>
         <h2>Todo App</h2>
         <TodoForm addTodo={addTodo}/>
 
