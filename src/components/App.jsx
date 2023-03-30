@@ -4,33 +4,39 @@ import '../reset.css';
 import '../App.css';
 import TodoForm from './TodoForm.jsx';
 import TodoList from './TodoList.jsx';
+import useLocalStorage from '../hooks/useLocalStorage';
 
 function App() {
-  const [name, setName] = useState('');
+  // const [name, setName] = useState('');
+  const [name, setName] = useLocalStorage('name', '');
+  const [todos, setTodos] = useLocalStorage('todos', []);
+
+
+
   const nameInputEl = useRef(null);
-  const [todos, setTodos] = useState([
-    {
-      id: 1,
-      title: 'Finish React Series',
-      isComplete: false,
-      isEditing: false,
-    },
-    {
-      id: 2,
-      title: 'Go Grocery',
-      isComplete: true,
-      isEditing: false,
-    },
-    {
-      id: 3,
-      title: 'Take over world',
-      isComplete: false,
-      isEditing: false,
-    },
-  ]);
+  // const [todos, setTodos] = useState([
+  //   {
+  //     id: 1,
+  //     title: 'Finish React Series',
+  //     isComplete: false,
+  //     isEditing: false,
+  //   },
+  //   {
+  //     id: 2,
+  //     title: 'Go Grocery',
+  //     isComplete: true,
+  //     isEditing: false,
+  //   },
+  //   {
+  //     id: 3,
+  //     title: 'Take over world',
+  //     isComplete: false,
+  //     isEditing: false,
+  //   },
+  // ]);
 
   
-const [idForTodo, setIdForTodo] = useState(4);
+const [idForTodo, setIdForTodo] = useLocalStorage('idForTodo', 1);
 
   function addTodo(todo){
     // con el arrata incializado con "..." puntos antes, quiere decier que estamos agregando un nuevo elemento al array tal cual este en ese momento.
@@ -141,14 +147,22 @@ return todos.filter(todo => !todo.isComplete);
 }
 
 useEffect (()=>{
-  console.log('use effect running');
+  // console.log('use effect running');
   nameInputEl.current.focus();
 
+  // setName(JSON.parse(localStorage.getItem('name')) ?? '');
+
   return function cleanup(){
-console.log('cleaning up');
+// console.log('cleaning up');
   };
+
   // sin los corchetes ", []" se ejecuta en cualquier elemento/cambia cualquier estado.
 }, []);
+
+function handleNameInput(event) {
+ setName(event.target.value);
+//  localStorage.setItem('name', JSON.stringify( event.target.value));
+}
 
   return (
     <div className="todo-app-container">
@@ -163,7 +177,7 @@ console.log('cleaning up');
             className='todo-input' 
             placeholder='What is your name?'
             value={name}
-            onChange={event => setName(event.target.value)}
+            onChange={handleNameInput}
              />
           </form>
           {name && <p className="name-label">Hello, {name}</p>}
