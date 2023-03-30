@@ -103,6 +103,36 @@ function cancelEdit(event,id){
   setTodos(updatedTodos);
 }
 
+function remaining() {
+  return todos.filter(todo => !todo.isComplete).length;
+}
+
+function clearCompleted() {
+  setTodos([...todos].filter(todo => !todo.isComplete));
+}
+
+function completeAllTodos() {
+  const updatedTodos = todos.map(todo => {
+    
+      todo.isComplete = true;
+
+    return todo;
+  })
+
+  setTodos(updatedTodos);
+}
+
+function todosFiltered(filter) {
+if(filter === 'all'){
+return todos;
+} else if(filter === 'active') {
+return todos.filter(todo => !todo.isComplete);
+} else if(filter === 'completed'){
+  return todos.filter(todo => todo.isComplete);
+}
+
+}
+
   return (
     <div className="todo-app-container">
       <div className="todo-app">
@@ -111,12 +141,16 @@ function cancelEdit(event,id){
 
 {todos.length > 0 ? (
       <TodoList 
-      todos={todos} 
+      todos={todos}
       completeTodo={completeTodo}
       markAsEditing={markAsEditing}
       updateTodo={updateTodo}
       cancelEdit={cancelEdit}
       deleteTodo={deleteTodo}
+      remaining={remaining}
+      clearCompleted={clearCompleted}
+      completeAllTodos={completeAllTodos}
+      todosFiltered={todosFiltered}
       />
         ) : (
           <NoTodos />

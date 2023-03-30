@@ -14,7 +14,7 @@ export default class AppClass extends Component {
           id: 2,
           title: 'Go Grocery',
           isComplete: true,
-        },
+        } ,
         {
           id: 3,
           title: 'Take over world',
