@@ -1,33 +1,40 @@
-import React, {useState} from 'react'
-import PropTypes from 'prop-types';
+import React, {useState, useContext} from 'react'
+import { TodosContext } from '../context/TodosContext';
 
-TodoForm.propTypes = {
-    addTodo: PropTypes.func.isRequired,
-    
-    }
 
-function TodoForm(props) {
+function TodoForm() {
+  const {todos, setTodos, idForTodo, setIdForTodo} = useContext(TodosContext);
+
+
     const [todoInput, setTodoInput] = useState('');
 
     function handleInput(event){
         setTodoInput(event.target.value);
       }
 
-      function handleSubmit(event){
+      function addTodo(event){
         event.preventDefault();
 
         if(todoInput.trim().length === 0) {
           return;
         }
 
-// Se llamno a una funcion
-        props.addTodo(todoInput);
+    // con el arrata incializado con "..." puntos antes, quiere decier que estamos agregando un nuevo elemento al array tal cual este en ese momento.
+    setTodos([...todos, {
+      id: idForTodo,
+      title: todoInput,
+      isComplete: false,
+  }])
+
+  
+  setIdForTodo(prevIdForTodo => prevIdForTodo +1);
 
         setTodoInput('');
       }
     
   return (
-    <form action="#" onSubmit={handleSubmit}>
+    <form action="#" onSubmit={addTodo}>
+      
     <input
       type="text"
       value={todoInput}
