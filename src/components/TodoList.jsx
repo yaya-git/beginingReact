@@ -5,6 +5,7 @@ import TodoCompleteAllTodos from './TodoCompleteAllTodos';
 import TodoFilters from './TodoFilters';
 import useToggle from '../hooks/useToggle';
 import { TodosContext } from '../context/TodosContext';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 
 
@@ -74,9 +75,11 @@ const {todos, setTodos, todosFiltered} = useContext(TodosContext);
 
   return (
     <>
-        <ul className="todo-list">
+    <TransitionGroup component="ul" className="todo-list">
+        {/* <ul className="todo-list"> */}
           {todosFiltered().map((todo, index) => (
-            <li key={todo.id} className="todo-item-container">
+            <CSSTransition key={todo.id} timeout={300} classNames="slide-horizontal">
+            <li className="todo-item-container">
               <div className="todo-item">
                 <input 
                 type="checkbox" 
@@ -120,8 +123,10 @@ const {todos, setTodos, todosFiltered} = useContext(TodosContext);
                 </svg>
               </button>
             </li>
+            </CSSTransition>
           ))}
-        </ul>
+        {/* </ul> */}
+        </TransitionGroup>
 
         <div className="toggle-container">
             <button 
@@ -132,20 +137,31 @@ const {todos, setTodos, todosFiltered} = useContext(TodosContext);
             className="button">Features Two Toggle</button>
         </div>
 
-{isFeaturesOneVisible && (
+<CSSTransition
+  in={isFeaturesOneVisible}
+  timeout={300}
+  classNames="slide-vertical"
+  unmountOnExit
+>
         <div className="check-all-container">
             <TodoCompleteAllTodos />
             <TodoItemsRemaining />
         </div>
-)}
-{isFeaturesTwoVisible && (
+</CSSTransition>
+
+<CSSTransition
+  in={isFeaturesTwoVisible}
+  timeout={300}
+  classNames="slide-vertical"
+  unmountOnExit
+>
         <div className="other-buttons-container">
                   <TodoFilters />
           <div>
             <TodoClearCompleted />
           </div>
         </div>
-)}
+</CSSTransition>
         </>
   )
 }

@@ -6,6 +6,7 @@ import TodoForm from './TodoForm.jsx';
 import TodoList from './TodoList.jsx';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { TodosContext } from '../context/TodosContext.js';
+import { CSSTransition, SwitchTransition } from 'react-transition-group';
 
 function App() {
   const [name, setName] = useLocalStorage('name', '');
@@ -53,6 +54,7 @@ function handleNameInput(event) {
 }
 
   return (
+    // estado global, todos los hijos tendran acceso a los valores definidos en el context.provider
     <TodosContext.Provider value={{ todos, setTodos, idForTodo, setIdForTodo,todosFiltered, filter, setFilter }}>
     <div className="todo-app-container">
       <div className="todo-app">
@@ -69,11 +71,26 @@ function handleNameInput(event) {
             onChange={handleNameInput}
              />
           </form>
-          {name && <p className="name-label">Hello, {name}</p>}
+          <CSSTransition
+  in={name.length > 0}
+  timeout={300}
+  classNames="slide-vertical"
+  unmountOnExit
+>
+          <p className="name-label">Hello, {name}</p>
+          </CSSTransition>
         </div>
         <h2>Todo App</h2>
         <TodoForm />
 
+
+<SwitchTransition mode="out-in">
+  <CSSTransition
+  key={todos.length > 0}
+  timeout={300}
+  classNames="slide-vertical"
+  unmountOnExit
+  >
 {todos.length > 0 ? (
       <TodoList />
         ) : (
@@ -81,6 +98,10 @@ function handleNameInput(event) {
 
           
         )}
+</CSSTransition>
+</SwitchTransition>
+
+
       </div>
     </div>
     </TodosContext.Provider>
